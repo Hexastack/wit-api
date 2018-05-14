@@ -45,8 +45,6 @@ const Wit = function(token) {
   this.expression = expression(this.doRequest)
   this.train = train(this.doRequest)
   this.app = app(this.doRequest)
-  this.entityWrapper = entityWrapper(this.doRequest)
-  this.valueWrapper = entityValueWrapper(this.doRequest)
 }
 
 module.exports = Wit

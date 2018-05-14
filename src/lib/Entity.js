@@ -1,35 +1,66 @@
-const EntityValue = require('../EntityValue')
-const Expression = require('../Expression')
-
-module.exports = function(request, cb) {
-  const entityValue = EntityValue(request, cb)
-  const expression = Expression(request, cb)
-  return function (data) {
-    this.data = data
-    this.id = data.name
-    this.addValue = function (value, cb) {
-      return entityValue.add(this.id, value, cb)
-    }
-    this.deleteValue = function (value, cb) {
-      return entityValue.delete(this.id, value, cb)
-    }
-    this.getValues = function () {
-      return this.data.values
-    }
-    this.getValue = function (name) {
-      const filtredValues = this.data.values.filter((value) => {
-        return value.value === name
-      })
-      if (!filtredValues.length) {
-        return null
-      }
-      return filtredValues[0]
-    }
-    this.addExpression = function (value, expression, cb) {
-      return expression.add(this.id, value, expression, cb)
-    }
-    this.deleteExpression = function (value, expression, cb) {
-      return expression.delete(this.id, value, expression, cb)
-    }
-  }
+const Entity = function (name, request, data = {
+  id: '', values: [], builtin: false, doc: '', lang: 'en', lookups: []
+}) {
+  this.name = name
+  this.id = data.id
+  this.values = data.values
+  this.builtin = data.builtin
+  this.doc = data.doc
+  this.lang = data.lang
+  this.lookups = data.lookups
+  this.request = request
 }
+// Methods
+Object.assign(Entity.prototype, {
+  fill () {
+    let payload = {
+      method: 'GET',
+      uri: `/entities/${this.name}`
+    }
+    function doRequest(request, payload, self) {
+      return new Promise((resolve, reject) => {
+        request(payload, (err, res) => {
+          if (err) {
+            return reject(err)
+          }
+          return resolve(Object.assign(self, new Entity(res.name, request, res)))
+        })
+      })
+    }
+    async function reassign(self) {
+      return await doRequest(self.request, payload, self)
+    }
+    return reassign(this)
+  },
+  save () {
+    const body = JSON.stringify({
+      id: this.id,
+      doc: this.doc,
+      values: this.values
+    })
+    let payload = {
+      method: 'POST',
+      uri: `/entities/${this.name}`,
+      body
+    }
+    function doRequest(request, payload, self) {
+      return new Promise((resolve, reject) => {
+        request(payload, (err, res) => {
+          if (err) {
+            return reject(err)
+          }
+          if (body.values) {
+            res.values = body.values
+          }
+          return resolve(Object.assign(self, new Entity(res.name, request, res)))
+        })
+      })
+    }
+    async function reassign(self) {
+      return await doRequest(self.request, payload, self)
+    }
+    return reassign(this)
+  }
+})
+
+module.exports = Entity

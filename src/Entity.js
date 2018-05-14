@@ -1,15 +1,5 @@
-const Entity = function(name, data = {
-    id: '', values: null, builtin: false, doc: '', lang: 'en', lookups: []
-  }) {
-  this.name = name
-  this.id = data.id
-  this.values = data.values
-  this.builtin = data.builtin
-  this.doc = data.doc
-  this.lang = data.lang
-  this.lookups = data.lookups
-}
-
+const Entity = require('./lib/Entity')
+console.log(Entity)
 const actions = {
   list: {
     method: 'GET',
@@ -42,14 +32,14 @@ module.exports = function (request) {
           if (err) {
             return reject(err)
           }
-          return resolve(res.map((entity) => new Entity(entity)))
+          return resolve(res.map((entity) => new Entity(entity, request)))
         })
       })
     },
     add: function (entity, doc = '') {
       let payload = actions.add
       try {
-        payload.body = JSON.stringify({entity, doc})
+        payload.body = JSON.stringify({ entity, doc })
       } catch (e) {
         return (e, null)
       }
@@ -58,7 +48,7 @@ module.exports = function (request) {
           if (err) {
             return reject(err)
           }
-          return resolve(new Entity(entity, res))
+          return resolve(new Entity(entity, request, res))
         })
       })
     },
@@ -70,7 +60,7 @@ module.exports = function (request) {
           if (err) {
             return reject(err)
           }
-          return resolve(new Entity(id, res))
+          return resolve(new Entity(id, request, res))
         })
       })
     },
@@ -90,7 +80,7 @@ module.exports = function (request) {
           if (changes.values) {
             res.values = changes.values
           }
-          return resolve(new Entity(res.name, res))
+          return resolve(new Entity(res.name, reuqest, res))
         })
       })
     },

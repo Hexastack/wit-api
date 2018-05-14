@@ -18,3 +18,5 @@ const Intent = function (result, options = { context: null, thread_id: '' }) {
     return max
   }
 }
+
+module.exports = Intent
