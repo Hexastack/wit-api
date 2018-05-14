@@ -9,9 +9,6 @@ const expression = require('./Expression')
 const train = require('./Train')
 const app = require('./App')
 
-const entityWrapper = require('./lib/Entity')
-const entityValueWrapper = require('./lib/EntityValue')
-
 Date.prototype.getFormattedDate = function() {
   const date = this.getDate()
   return date < 10 ? `0${date}` : date
