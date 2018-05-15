@@ -1,24 +1,26 @@
 const Entity = require('./lib/Entity')
 
-const actions = function (entity, value, expression) {
+const actions = function (entity, value) {
   return {
     add: {
       method: 'POST',
-      uri: `/entities/${entity}/values/${value}/expressions`
+      uri: `/entities/${entity}/values`
     },
     delete: {
       method: 'DELETE',
-      uri: `/entities/${entity}/values/${value}/expressions/${expression}`
+      uri: `/entities/${entity}/values/${value}`
     }
   }
 }
 
 module.exports = function (request) {
   return {
-    add: function (entity, value, expression) {
-      let payload = actions(entity, value).add
+    add: function (entity, value, expressions = [], metadata = '') {
+      let payload = actions(entity).add
       let body = {
+        value,
         expressions,
+        metadata
       }
       return new Promise((resolve, reject) => {
         try {
@@ -34,8 +36,8 @@ module.exports = function (request) {
         })
       })
     },
-    delete: function (entity, value, expression) {
-      let payload = actions(entity, value, expression).delete
+    delete: function (entity, value) {
+      let payload = actions(entity, value).delete
       return new Promise((resolve, reject) => {
         request(payload, (err, res) => {
           if (err) {
