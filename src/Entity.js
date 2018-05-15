@@ -80,6 +80,7 @@ module.exports = function (request) {
           if (changes.values) {
             res.values = changes.values
           }
+          // works fine still better to run get
           return resolve(new Entity(res.name, reuqest, res))
         })
       })

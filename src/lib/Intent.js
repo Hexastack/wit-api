@@ -18,5 +18,9 @@ const Intent = function (result, options = { context: null, thread_id: '' }) {
     return max
   }
 }
+// Methods
+Object.assign(Intent.prototype, {
+  
+})
 
 module.exports = Intent
