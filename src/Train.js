@@ -5,14 +5,31 @@ const actions = {
   }
 }
 
-module.exports = function (request, cb) {
-  return function (message, cb) {
+module.exports = function (request) {
+  return function (text, entities) {
+    // entity format : {
+    //   entity*,
+    //   value*,
+    //   start,
+    //   end
+    // }
     let payload = actions.default
-    try {
-      payload.body = JSON.stringify(changes)
-    } catch (e) {
-      return cb(e, null)
+    let body = {
+      text,
+      entities
     }
-    request(payload, cb)
+    return new Promise((resolve, reject) => {
+      try {
+        payload.body = JSON.stringify(body)
+      } catch (e) {
+        return reject(e)
+      }
+      request(payload, (err, res) => {
+        if (err) {
+          return reject(err)
+        }
+        return resolve(res)
+      })
+    })
   }
 }
