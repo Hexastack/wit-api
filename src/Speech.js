@@ -18,20 +18,24 @@ const actions = function (type = 'wav', params = { encoding: 'unsigned-integer',
     uri: '/speech',
     headers,
     optional: ['context', 'msg_id', 'thread_id', 'n'],
-    allowedMime : ['audio/wav', 'audio/mpeg3', 'audio/ulaw', 'audio/raw']
+    allowedMime: ['audio/wav', 'audio/mpeg3', 'audio/ulaw', 'audio/raw']
   }
 }
 
-const readfile = function (path) {
-  return { type: path.extname(path), audio: fs.createReadStream(path) }
+const readfile = function (filePath) {
+  let type = path.extname(filePath).replace(/^\./, '')
+  if (type === 'mp3') {
+    type = 'mpeg3'
+  }
+  return { type, audio: fs.createReadStream(filePath) }
 }
 
 module.exports = function (request) {
-  return function (path, options) {
+  return function (filePath, options) {
     return new Promise((resolve, reject) => {
-      const { type, audio } = type(path)
+      const { type, audio } = readfile(filePath)
       let payload = actions(type, options)
-      if(payload.allowedMime.indexOf(type) === -1) {
+      if (payload.allowedMime.indexOf(`audio/${type}`) === -1) {
         reject(new Error(`Unsupported mime type ${type}`))
       }
       for (const key in options) {
@@ -39,12 +43,13 @@ module.exports = function (request) {
           payload.qs[key] = options[key]
         }
       }
-      audio.pipe(request(payload, (err, res) => {
+      payload.body = audio
+      request(payload, (err, res) => {
         if (err) {
           return reject(err)
         }
         return resolve(new Intent(res, options))
-      }))
+      })
     })
   }
 }

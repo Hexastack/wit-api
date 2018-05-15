@@ -32,7 +32,7 @@ const getVersion = function() {
 const Wit = function(token) {
   this.token = token
   const requestWrapper = request.defaults({
-    baseUrl: `https://api.wit.ai/`,
+    baseUrl: 'https://api.wit.ai/',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
