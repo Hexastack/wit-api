@@ -33,18 +33,22 @@ Object.assign(Entity.prototype, {
     return reassign(this)
   },
   save () {
-    const body = JSON.stringify({
-      id: this.id,
+    let payload = {
+      method: 'PUT',
+      uri: `/entities/${this.id}`
+    }
+    const body = {
+      id: this.name,
       doc: this.doc,
       values: this.values
-    })
-    let payload = {
-      method: 'POST',
-      uri: `/entities/${this.name}`,
-      body
     }
     function doRequest(request, payload, self) {
       return new Promise((resolve, reject) => {
+        try {
+          payload.body = JSON.stringify(body)
+        } catch (e) {
+          return reject(e)
+        }
         request(payload, (err, res) => {
           if (err) {
             return reject(err)
@@ -60,6 +64,12 @@ Object.assign(Entity.prototype, {
       return await doRequest(self.request, payload, self)
     }
     return reassign(this)
+  },
+  addValue(value) {
+
+  },
+  removeValue(value) {
+
   }
 })
 

@@ -1,5 +1,5 @@
 const Entity = require('./lib/Entity')
-console.log(Entity)
+
 const actions = {
   list: {
     method: 'GET',
@@ -38,12 +38,12 @@ module.exports = function (request) {
     },
     add: function (entity, doc = '') {
       let payload = actions.add
-      try {
-        payload.body = JSON.stringify({ entity, doc })
-      } catch (e) {
-        return (e, null)
-      }
       return new Promise((resolve, reject) => {
+        try {
+          payload.body = JSON.stringify({ entity, doc })
+        } catch (e) {
+          return reject(e)
+        }
         request(payload, (err, res) => {
           if (err) {
             return reject(err)
@@ -67,12 +67,12 @@ module.exports = function (request) {
     update: function (id, changes) {
       let payload = actions.update
       payload.uri += `/${id}`
-      try {
-        payload.body = JSON.stringify(changes)
-      } catch (e) {
-        return (e, null)
-      }
       return new Promise((resolve, reject) => {
+        try {
+          payload.body = JSON.stringify(changes)
+        } catch (e) {
+          return reject(e)
+        }
         request(payload, (err, res) => {
           if (err) {
             return reject(err)
