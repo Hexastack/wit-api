@@ -27,8 +27,6 @@ const getVersion = function() {
   return `${date.getFullYear()}${date.getFormattedMonth()}${date.getFormattedDate()}`
 }
 
-
-
 const Wit = function(token) {
   this.token = token
   const requestWrapper = request.defaults({
@@ -46,18 +44,21 @@ const Wit = function(token) {
   this.doRequest = requestApi(requestWrapper)
   this.message = message(this.doRequest)
   this.speech = speech(this.doRequest)
-  this.entity = entity(this.doRequest)
-  this.Value = value(this.doRequest)
+  this.value = value(this.doRequest)
   this.expression = expression(this.doRequest)
   this.train = train(this.doRequest)
-  this.app = app(this.doRequest)
-  this.App = function(name, data) {
+
+  this.app = function(name, data) {
     return new App(name, this.doRequest, data)
   }
-  this.Entity = function(name, data) {
+  Object.assign(this.app, app(this.doRequest))
+
+  this.entity = function(name, data) {
     return new Entity(name, this.doRequest, data)
   }
-  this.Intent = function(result, options) {
+  Object.assign(this.entity, entity(this.doRequest))
+
+  this.intent = function(result, options) {
     return new Intent(result, options)
   }
 }

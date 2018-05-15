@@ -37,6 +37,9 @@ const options = {
 wit.message('Wake me up when septembre end!', options).then((intent) => {
   // intent Object still holds the context and the thread for later use
   console.log(intent)
+  // intent has it's methods, here we are getting entity with the highest confidance
+  const bestMatch = intent.maxConfidence()
+  console.log(bestMatch)
 }).catch((error) => {
   console.error(error)
 })
@@ -63,5 +66,57 @@ wit.speech('/path/to/my5secSpeech.wav').then((intent) => {
   console.log(intent)
 }).catch((error) => {
   console.error(error)
+})
+```
+
+## Entity Value Expression
+Get all entities of the app
+```Javascript
+wit.entity.list().then((entities) => {
+  // retuens a list of enitity instances
+  console.log(entities)
+})
+```
+
+Create a new entity
+```Javascript
+wit.entity.add('played_games', 'Video games I played').then((entity) => {
+  // return entity instance
+  console.log(entity)
+})
+```
+
+Get an entity
+```Javascript
+wit.entity.get('played_games').then((entity) => {
+  // return the same entity instance as previous example
+  console.log(entity)
+})
+```
+
+Update an entity
+```Javascript
+const changes = {
+  values: [
+    {
+      value: 'Metal Gear Solid 2',
+      expressions: [
+        'metal gear 2',
+        'mgs2',
+        'sons of liberty'
+      ],
+      metadata: {game_id: 3, release_date: 2001}
+    }
+  ]
+}
+wit.entity.update('played_games', changes).then((entity) => {
+  console.log(entity)
+})
+```
+
+Permanently delete an entity
+```Javascript
+wit.entity.delete('played_games').then((res) => {
+  console.log('Deleted!')
 })
 ```
