@@ -12,7 +12,7 @@ const Entity = function (name, request, data = {
 }
 // Methods
 Object.assign(Entity.prototype, {
-  fill () {
+  sync () {
     let payload = {
       method: 'GET',
       uri: `/entities/${this.name}`
