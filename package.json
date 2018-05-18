@@ -3,11 +3,25 @@
   "version": "0.0.1",
   "description": "Implementation of wit api, provides methods to easily manage your wit app",
   "main": "index.js",
+  "keywords": [
+    "wit",
+    "api",
+    "nlp",
+    "wit-api",
+    "ai",
+    "bot",
+    "chatbot",
+    "ES6"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified YET\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hexastack/wit-api.git"
   },
   "author": "Hexastack <contact@hexastack.com>",
-  "license": "GPL-3.0",
+  "license": "BSD-4-Clause",
   "dependencies": {
     "request": "^2.85.0"
   }
