@@ -11,7 +11,7 @@ npm install wit-api
 ```Javascript
 const Wit = require('wit-api')
 
-const wit = new Wit('xxxxxxxxYour-Access-Tokenxxxxxxxxx')
+const wit = new Wit('<YOUR-SERVER-ACCESS-TOKEN>')
 ```
 
 ## Message
