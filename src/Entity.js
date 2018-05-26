@@ -14,7 +14,7 @@ const actions = {
     uri: '/entities'
   },
   update: {
-    method: 'POST',
+    method: 'PUT',
     uri: '/entities'
   },
   delete: {
@@ -81,7 +81,7 @@ module.exports = function (request) {
             res.values = changes.values
           }
           // works fine still better to run get
-          return resolve(new Entity(res.name, reuqest, res))
+          return resolve(new Entity(res.name, request, res))
         })
       })
     },
