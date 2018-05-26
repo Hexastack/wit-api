@@ -40,7 +40,7 @@ module.exports = function (request) {
       let payload = actions.add
       return new Promise((resolve, reject) => {
         try {
-          payload.body = JSON.stringify({ entity, doc })
+          payload.body = JSON.stringify({ id: entity, doc })
         } catch (e) {
           return reject(e)
         }
