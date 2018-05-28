@@ -1,7 +1,8 @@
 # wit-api
-Wit-api allow you to easily configure and train your NLP.
+wit-api is a node package that allows you to easily configure and train your NLP through Wit.ai HTTP API.
 
-It uses `promises` so be aware to always `catch` at least once when implementing your code.
+Note that wit-api uses `promises`, so be aware to always `catch` at least once when implementing your code.
+
 ## Installation
 ```bash
 npm install wit-api
@@ -17,16 +18,17 @@ const wit = new Wit('<YOUR-SERVER-ACCESS-TOKEN>')
 ## Message
 ```Javascript
 wit.message('Wake me up when septembre end!').then((intent) => {
-  // intent Object is returned
+  // intent is an instance of Entity
   console.log(intent)
-  // intent has it's methods, here we are getting entity with the highest confidance
+  // We can call Entity methods cuch as `.maxConfidence()`
+  // Here we are getting the entity with the highest confidence score
   const bestMatch = intent.maxConfidence()
   console.log(bestMatch)
 }).catch((error) => {
   console.error(error)
 })
 ```
-**message with context and thread**
+**Message with context and thread**
 ```Javascript
 const options = {
   context: {
@@ -34,12 +36,12 @@ const options = {
     locale: 'en_GB'
   },
   thread_id: '100',
-  n: 4 // return up to 4 intent possible
+  n: 4 // returns up to 4 possible intents
 }
-wit.message('Wake me up when septembre end!', options).then((intent) => {
-  // intent Object still holds the context and the thread for later use
+wit.message('Wake me up when september end!', options).then((intent) => {
+  // intent, as an instance of Entity, still holds the context and the thread for later use
   console.log(intent)
-  // intent has it's methods, here we are getting entity with the highest confidance
+  // Here we are getting entity with the highest confidence score
   const bestMatch = intent.maxConfidence()
   console.log(bestMatch)
 }).catch((error) => {
@@ -48,18 +50,18 @@ wit.message('Wake me up when septembre end!', options).then((intent) => {
 ```
 
 ## Speech
-The audio file must be not longer than 10 sec
+The audio file must have a duration no longer than 10 sec.
 
-The supported formats are
+The supported formats are as follows:
 - audio/wav RIFF WAVE (linear, little-endian).
 - audio/mpeg3 for mp3
 - audio/ulaw for G.711 u-law file or stream. Sampling rate must be 8khz
 - audio/raw with mandatory [parameters](parameters)
 
-Thus after some heavy testing it seems that wav is the most stable and best matching, we recommand to convert your dataset to wave (linear, little-endian) for better results, also if you are recording new data you can use [sox](sox)
+Thus after some heavy testing it seems that wav is the most stable and best matching, we recommand to convert your dataset to wave (linear, little-endian) for better results. You can use [sox](sox) to record new data.
 ```bash
 $ sox -d -b 16 -c 1 -r 16k sample.wav
-# ctrl+C to end the recording
+# ctrl+C to stop the recording
 ```
 
 ```Javascript
@@ -75,7 +77,7 @@ You can create a local entity instance:
 ```Javascript
 const myEntity = wit.entity('played_games')
 ```
-You can then sync with the api:
+You can then sync the entity with the API:
 ```Javascript
 myEntity.sync().then(() => {
   // Synchonized entity
@@ -86,24 +88,18 @@ const myEntity = wit.entity('played_games').sync().then(() => {
   // sync-ked !
 })
 ```
-To update the entity you can call the `save` method:
+To update the entity you can call the `.save()` method:
 ```Javascript
 myEntity.doc = 'Video games I played'
 myEntity.save().then(() => {
   console.log(myEntity)
 })
 ```
-To create an entity and commit it you also have to call the `save` method:
-```Javascript
-const commitedEntity = wit.entity('favorit_food').save().then(() => {
-  console.log(commitedEntity)
-})
-```
 
 ## Training
-The training happens on an EntityValue level, so you need to have at least one entity that have one value. Then you can send text to indicate that it matchs the EntityValue.
+The training happens on an EntityValue level, so you need to have an entity having at least one value. Then you can send text to indicate that it matches the EntityValue.
 
-Additionaly if you are capturing relevant data you can indicate where the relevant portion starts and ends.
+Additionaly if you are capturing relevant data, you can indicate where the relevant portion starts and ends.
 ```Javascript
 wit.train('I enjoyed playing MGS2 while eating pizza', {
   [
@@ -126,7 +122,7 @@ wit.train('I enjoyed playing MGS2 while eating pizza', {
 #### Get all entities of the app
 ```Javascript
 wit.entity.list().then((entities) => {
-  // retuens a list of enitity instances
+  // Returns a list of all entities (Including Built-in entities)
   console.log(entities)
 })
 ```
@@ -134,20 +130,19 @@ wit.entity.list().then((entities) => {
 #### Create a new entity
 ```Javascript
 wit.entity.add('played_games', 'Video games I played').then((entity) => {
-  // return entity instance
+  // Returns the entity instance `played_games`
   console.log(entity)
 })
 ```
-Which is equivalant to `wit.entity('played_games', {doc: 'Video games I played'}).save()`
 
 #### Get an entity
 ```Javascript
 wit.entity.get('played_games').then((entity) => {
-  // return the same entity instance as previous example
+  // returns the same entity instance as previous example
   console.log(entity)
 })
 ```
-Which is equivalant to `wit.entity('played_games').sync()`
+Which is equivalent to `wit.entity('played_games').sync()`
 
 #### Update an entity
 ```Javascript
@@ -169,17 +164,17 @@ wit.entity.update('played_games', changes).then((entity) => {
 })
 ```
 
-#### Permanently delete an entity
+#### Delete an entity (permanently)
 ```Javascript
 wit.entity.delete('played_games').then((res) => {
   console.log('Deleted!')
 })
 ```
 ### Values
-#### Add a value
+#### Add an entity value
 ```Javascript
-wit.value.add('played_games', 'Metal_Gear_Solid_2').then((enitity) => {
-  // this does also return an entity instance
+wit.value.add('played_games', 'Metal_Gear_Solid_2').then((entity) => {
+  // This does also return an entity instance
   console.log(entity)
 })
 ```
@@ -193,7 +188,7 @@ wit.value.delete('Metal_Gear_Solid_2').then((res) => {
 #### Add an expression
 ```Javascript
 wit.expression.add('played_games', 'Metal Gear Solid 2', 'mgs2').then((entity) => {
-  // yet still return an entity instance
+  // Yet still returns an entity instance
   console.log(entity)
 })
 ```
@@ -208,7 +203,7 @@ wit.expression.delete('mgs2').then((res) => {
 #### List all your apps
 ```Javascript
 wit.app.list().then((myApps){
-  // array of apps instances
+  // Array of all app instances
   console.log(myApps)
 })
 ```
@@ -216,9 +211,9 @@ wit.app.list().then((myApps){
 ```Javascript
 // wit.app.add(appname, private, language, description)
 wit.app.add('myNewApp', true, 'en', 'Brand new App').then((myNewApp) => {
-  // the returned myNewApp uses a new token and has same methods as wit
+  // the returned myNewApp uses a new token and has same methods as the `wit` object
   myNewApp.entities.list().then((entities) => {
-    // list of default wit's entities
+    // This will return the list of wit's built-in entities, since we did not create one yet
     console.log(entities)
   })
 })
@@ -230,7 +225,7 @@ wit.update(myNewApp.id, {private = false}).then(() => {
   console.log(myNewApp)
 })
 ```
-#### Permanently delete an app
+#### Delete an app (permanently)
 ```Javascript
 wit.delete(myNewApp.id).then((res) => {
   console.log('Permanently deleted')
