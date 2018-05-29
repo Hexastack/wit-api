@@ -64,12 +64,6 @@ Object.assign(Entity.prototype, {
       return await doRequest(self.request, payload, self)
     }
     return reassign(this)
-  },
-  addValue(value) {
-
-  },
-  removeValue(value) {
-
   }
 })
 
