@@ -6,7 +6,7 @@ const speech = require('./Speech')
 const entity = require('./Entity')
 const value = require('./Value')
 const expression = require('./Expression')
-const train = require('./Train')
+const sample = require('./Sample')
 const app = require('./App')
 
 const App = require('./lib/App')
@@ -46,7 +46,9 @@ const Wit = function(token) {
   this.speech = speech(this.doRequest)
   this.value = value(this.doRequest)
   this.expression = expression(this.doRequest)
-  this.train = train(this.doRequest)
+  const trainer = sample(this.doRequest)
+  this.train = trainer.add
+  this.forget = trainer.delete
 
   this.app = function(name, data) {
     return new App(name, this.doRequest, data)

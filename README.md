@@ -101,19 +101,28 @@ The training happens on an EntityValue level, so you need to have an entity havi
 
 Additionaly if you are capturing relevant data, you can indicate where the relevant portion starts and ends.
 ```Javascript
-wit.train('I enjoyed playing MGS2 while eating pizza', {
-  [
-    {
-      entity: "played_games",
-      value: "Metal_Gear_Solid_2"
-      start: 17,
-      end: 21
-    },
-    {
-      entity: "favorit_food",
-      value: "pizza"
-    }
-  ]
+wit.train('I enjoyed playing MGS2 while eating pizza', [
+  {
+    entity: "played_games",
+    value: "Metal_Gear_Solid_2",
+    start: 17,
+    end: 21
+  },
+  {
+    entity: "favorit_food",
+    value: "pizza"
+  }
+]).then(res => {
+  console.log(res)
+  // { sent: true, n: 1 }
+})
+```
+To revert a training you can use `.forget` method
+```Javascript
+wit.forget('I enjoyed playing MGS2 while eating pizza')
+.then(res => {
+  console.log(res)
+  // { sent: true, n: 1 }
 })
 ```
 
