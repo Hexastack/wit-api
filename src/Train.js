@@ -14,10 +14,10 @@ module.exports = function (request) {
     //   end
     // }
     let payload = actions.default
-    let body = {
+    let body = [{
       text,
       entities
-    }
+    }]
     return new Promise((resolve, reject) => {
       try {
         payload.body = JSON.stringify(body)
