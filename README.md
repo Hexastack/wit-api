@@ -8,7 +8,7 @@ Note that wit-api uses `promises`, so be aware to always `catch` at least once w
 npm install wit-api
 ```
 
-## Initialisation
+## Initialization
 ```Javascript
 const Wit = require('wit-api')
 
