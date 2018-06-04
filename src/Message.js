@@ -1,19 +1,20 @@
 const Intent = require('./lib/Intent')
 
-const actions = {
-  default: {
+const actions = function() {
+  return {
     method: 'GET',
-    uri: '/message',
-    optional: ['context', 'msg_id', 'thread_id', 'n', 'verbose']
+    uri: '/message'
   }
 }
 
+const optional = ['context', 'msg_id', 'thread_id', 'n', 'verbose']
+
 module.exports = function (request) {
   return function(message, options) {
-    let payload = actions.default
+    let payload = actions()
     payload.qs = {q: message}
     for (const key in options) {
-      if (actions.default.optional.indexOf(key) !== -1) {
+      if (optional.indexOf(key) !== -1) {
         payload.qs[key] = options[key]
       }
     }

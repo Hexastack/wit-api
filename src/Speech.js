@@ -16,11 +16,12 @@ const actions = function (type = 'wav', params = { encoding: 'unsigned-integer',
   return {
     method: 'POST',
     uri: '/speech',
-    headers,
-    optional: ['context', 'msg_id', 'thread_id', 'n'],
-    allowedMime: ['audio/wav', 'audio/mpeg3', 'audio/ulaw', 'audio/raw']
+    headers    
   }
 }
+
+const optional = ['context', 'msg_id', 'thread_id', 'n']
+const allowedMime = ['audio/wav', 'audio/mpeg3', 'audio/ulaw', 'audio/raw']
 
 const readfile = function (filePath) {
   let type = path.extname(filePath).replace(/^\./, '')
@@ -35,11 +36,11 @@ module.exports = function (request) {
     return new Promise((resolve, reject) => {
       const { type, audio } = readfile(filePath)
       let payload = actions(type, options)
-      if (payload.allowedMime.indexOf(`audio/${type}`) === -1) {
+      if (allowedMime.indexOf(`audio/${type}`) === -1) {
         reject(new Error(`Unsupported mime type ${type}`))
       }
       for (const key in options) {
-        if (actions.default.optional.indexOf(key) !== -1) {
+        if (optional.indexOf(key) !== -1) {
           payload.qs[key] = options[key]
         }
       }

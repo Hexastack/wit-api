@@ -1,18 +1,20 @@
-const actions = {
-  add: {
-    method: 'POST',
-    uri: '/samples'
-  },
-  delete: {
-    method: 'DELETE',
-    uri: '/samples'
+const actions = function(id) {
+  return {
+    add: {
+      method: 'POST',
+      uri: '/samples'
+    },
+    delete: {
+      method: 'DELETE',
+      uri: '/samples'
+    }
   }
 }
 
 module.exports = function (request) {
   return {
     add: function(text, entities) {
-      let payload = actions.add
+      let payload = actions().add
       let body = [{
         text,
         entities
@@ -32,7 +34,7 @@ module.exports = function (request) {
       })
     },
     delete: function (text) {
-      let payload = actions.delete
+      let payload = actions().delete
       let body = [{
         text
       }]

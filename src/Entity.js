@@ -1,32 +1,34 @@
 const Entity = require('./lib/Entity')
 
-const actions = {
-  list: {
-    method: 'GET',
-    uri: '/entities'
-  },
-  add: {
-    method: 'POST',
-    uri: '/entities'
-  },
-  get: {
-    method: 'GET',
-    uri: '/entities'
-  },
-  update: {
-    method: 'PUT',
-    uri: '/entities'
-  },
-  delete: {
-    method: 'DELETE',
-    uri: '/entities'
+const actions = function(id) {
+  return {
+    list: {
+      method: 'GET',
+      uri: '/entities'
+    },
+    add: {
+      method: 'POST',
+      uri: '/entities'
+    },
+    get: {
+      method: 'GET',
+      uri: `/entities/${id}`
+    },
+    update: {
+      method: 'PUT',
+      uri: `/entities/${id}`
+    },
+    delete: {
+      method: 'DELETE',
+      uri: `/entities/${id}`
+    }
   }
 }
 
 module.exports = function (request) {
   return {
     list: function () {
-      const payload = actions.list
+      const payload = actions().list
       return new Promise((resolve, reject) => {
         request(payload, (err, res) => {
           if (err) {
@@ -37,7 +39,7 @@ module.exports = function (request) {
       })
     },
     add: function (entity, doc = '') {
-      let payload = actions.add
+      let payload = actions().add
       return new Promise((resolve, reject) => {
         try {
           payload.body = JSON.stringify({ id: entity, doc })
@@ -53,8 +55,7 @@ module.exports = function (request) {
       })
     },
     get: function (id) {
-      let payload = actions.get
-      payload.uri += `/${id}`
+      let payload = actions(id).get
       return new Promise((resolve, reject) => {
         request(payload, (err, res) => {
           if (err) {
@@ -65,8 +66,7 @@ module.exports = function (request) {
       })
     },
     update: function (id, changes) {
-      let payload = actions.update
-      payload.uri += `/${id}`
+      let payload = actions(id).update
       return new Promise((resolve, reject) => {
         try {
           payload.body = JSON.stringify(changes)
@@ -86,8 +86,7 @@ module.exports = function (request) {
       })
     },
     delete: function (id) {
-      let payload = actions.delete
-      payload.uri += `/${id}`
+      let payload = actions(id).delete
       return new Promise((resolve, reject) => {
         request(payload, (err, res) => {
           if (err) {

@@ -1,29 +1,31 @@
 const App = require('./lib/App')
 const Wit = require('./Wit')
 
-const actions = {
-  list: {
-    method: 'GET',
-    uri: '/apps'
-  },
-  add: {
-    method: 'POST',
-    uri: '/apps'
-  },
-  update: {
-    method: 'POST',
-    uri: '/apps'
-  },
-  delete: {
-    method: 'DELETE',
-    uri: '/apps'
+const actions = function(id) {
+  return {
+    list: {
+      method: 'GET',
+      uri: '/apps'
+    },
+    add: {
+      method: 'POST',
+      uri: '/apps'
+    },
+    update: {
+      method: 'POST',
+      uri: `/app/${id}`
+    },
+    delete: {
+      method: 'DELETE',
+      uri: `/app/${id}`
+    }
   }
 }
 
 module.exports = function (request) {
   return {
     list: function(limit = 500, offset = 0) {
-      const payload = actions.list
+      const payload = actions().list
       payload.qs = {
         limit,
         offset
@@ -38,7 +40,7 @@ module.exports = function (request) {
       })
     },
     add: function (name, private = true, lang = 'en', desc = '') {
-      let payload = actions.add
+      let payload = actions().add
       let body = {
         name,
         private,
@@ -61,8 +63,7 @@ module.exports = function (request) {
       })
     },
     update: function (id, changes) {
-      let payload = actions.update
-      payload.uri += `/${id}`
+      let payload = actions(id).update
       return new Promise((resolve, reject) => {
         try {
           payload.body = JSON.stringify(changes)
@@ -79,8 +80,7 @@ module.exports = function (request) {
       })
     },
     delete: function (id) {
-      let payload = actions.delete
-      payload.uri += `/${id}`
+      let payload = actions(id).delete
       return new Promise((resolve, reject) => {
         request(payload, (err, res) => {
           if (err) {
