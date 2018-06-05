@@ -18,7 +18,7 @@ module.exports = function (request) {
     add: function (entity, value, expression) {
       let payload = actions(entity, value).add
       let body = {
-        expressions
+        expression
       }
       return new Promise((resolve, reject) => {
         try {

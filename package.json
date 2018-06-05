@@ -14,7 +14,7 @@
     "ES6"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified YET\" && exit 1"
+    "test": "mocha --timeout 5000"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,9 @@
   "license": "BSD-4-Clause",
   "dependencies": {
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^5.2.0"
   }
 }

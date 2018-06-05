@@ -189,7 +189,7 @@ wit.value.add('played_games', 'Metal_Gear_Solid_2').then((entity) => {
 ```
 #### Delete a Value
 ```Javascript
-wit.value.delete('Metal_Gear_Solid_2').then((res) => {
+wit.value.delete('played_games', 'Metal_Gear_Solid_2').then((res) => {
   console.log('Deleted!')
 })
 ```
@@ -203,7 +203,7 @@ wit.expression.add('played_games', 'Metal Gear Solid 2', 'mgs2').then((entity) =
 ```
 #### Delete an expression
 ```Javascript
-wit.expression.delete('mgs2').then((res) => {
+wit.expression.delete('played_games', 'Metal Gear Solid 2', 'mgs2').then((res) => {
   console.log('Deleted!')
 })
 ```

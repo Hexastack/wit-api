@@ -5,7 +5,7 @@ module.exports = function(request) {
         return callback(error, null)
       }
       if (response && response.statusCode != '200') {
-        return callback(new Error(body), null)
+        return callback(JSON.parse(body), null)
       }
       try {
         return callback(null, JSON.parse(body))

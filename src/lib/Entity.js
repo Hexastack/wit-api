@@ -3,7 +3,7 @@ const Entity = function (name, request, data = {
 }) {
   this.name = name
   this.id = data.id
-  this.values = data.values
+  this.values = data.values || []
   this.builtin = data.builtin
   this.doc = data.doc
   this.lang = data.lang
