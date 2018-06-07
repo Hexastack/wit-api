@@ -26,7 +26,7 @@ describe('Wit', function () {
   })
 
   const wit = new Wit(token)
-
+  
   describe('Entity services', function () {
     describe('Get all entities', function () {
       it('Should return list of entites', function () {
@@ -170,6 +170,34 @@ describe('Wit', function () {
     it('Should remove an expression', function () {
       return wit.expression.delete('country', 'Yugoslavia', 'SFRY').then((res) => {
         expect(res).to.have.property('deleted')
+      })
+    })
+  })
+
+  const defectedWit = new Wit('cant be a token')
+  describe('Error handeling', function () {
+    describe('Api fails', function () {
+      it('Should fail & return Error instance with a message and code props', function () {
+        return defectedWit.entity.list().then(entities => {
+          console.log(entities)
+        }).catch(e => {
+          expect(e).to.be.an(Error)
+          expect(e).to.have.property('code')
+          expect(e.code).to.be('unknown')
+          expect(e.message).not.to.be.empty()
+        })
+      })
+    })
+    describe('Api errors', function () {
+      it('Should fail & return Error instance with a message and code props', function () {
+        return wit.entity.delete('cantbe_an_entity').then(entity => {
+          console.log(entity)
+        }).catch(e => {
+          expect(e).to.be.an(Error)
+          expect(e).to.have.property('code')
+          expect(e.code).to.be('not-found')
+          expect(e.message).not.to.be.empty()
+        })
       })
     })
   })

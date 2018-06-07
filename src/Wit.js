@@ -27,7 +27,7 @@ const getVersion = function() {
   return `${date.getFullYear()}${date.getFormattedMonth()}${date.getFormattedDate()}`
 }
 
-const Wit = function(token) {
+const Wit = function(token, timeout) {
   const requestWrapper = request.defaults({
     baseUrl: 'https://api.wit.ai/',
     headers: {
@@ -38,7 +38,7 @@ const Wit = function(token) {
     qs: {
       v: getVersion()
     },
-    timeout: 20000
+    timeout: timeout || 20000
   })
   this.doRequest = requestApi(requestWrapper)
   this.message = message(this.doRequest)
