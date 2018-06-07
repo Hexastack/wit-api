@@ -4,11 +4,14 @@ module.exports = function(request) {
       if (error) {
         return callback(error, null)
       }
+      
+      let res = JSON.parse(body)
       if (response && response.statusCode != '200') {
-        return callback(JSON.parse(body), null)
+        return callback(new Error(res.body), null)
       }
+      
       try {
-        return callback(null, JSON.parse(body))
+        return callback(null, res)
       } catch(e) {
         return callback(e, null)
       }
