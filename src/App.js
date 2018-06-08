@@ -1,5 +1,4 @@
 const App = require('./lib/App')
-const Wit = require('./Wit')
 
 const actions = function(id) {
   return {
@@ -12,12 +11,12 @@ const actions = function(id) {
       uri: '/apps'
     },
     update: {
-      method: 'POST',
-      uri: `/app/${id}`
+      method: 'PUT',
+      uri: `/apps/${id}`
     },
     delete: {
       method: 'DELETE',
-      uri: `/app/${id}`
+      uri: `/apps/${id}`
     }
   }
 }
@@ -58,7 +57,8 @@ module.exports = function (request) {
             return reject(err)
           }
           body.id = res.app_id
-          return resolve(new Wit(res.access_token).App(name, body))
+          body.token = res.access_token
+          return resolve(new App(name, request, body))
         })
       })
     },
@@ -75,7 +75,7 @@ module.exports = function (request) {
             return reject(err)
           }
           // this is very poor, better run get
-          return resolve(new App(changes.name, reuqest, changes))
+          return resolve(res)
         })
       })
     },

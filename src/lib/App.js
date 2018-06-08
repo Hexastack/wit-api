@@ -7,6 +7,7 @@ const App = function (name, request, data = {
   this.description = data.description
   this.lang = data.lang
   this.created_at = data.created_at
+  this.token = data.token || ''
   this.request = request
 }
 // Methods

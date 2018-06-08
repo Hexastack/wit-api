@@ -220,8 +220,9 @@ wit.app.list().then((myApps){
 ```Javascript
 // wit.app.add(appname, private, language, description)
 wit.app.add('myNewApp', true, 'en', 'Brand new App').then((myNewApp) => {
-  // the returned myNewApp uses a new token and has same methods as the `wit` object
-  myNewApp.entities.list().then((entities) => {
+  const myNewWit = new Wit(myNewApp.token)
+  // the returned myNewWit uses a new token and has same methods as the `wit` object
+  myNewWit.entity.list().then((entities) => {
     // This will return the list of wit's built-in entities, since we did not create one yet
     console.log(entities)
   })
@@ -229,14 +230,14 @@ wit.app.add('myNewApp', true, 'en', 'Brand new App').then((myNewApp) => {
 ```
 #### Update an app
 ```Javascript
-wit.update(myNewApp.id, {private = false}).then(() => {
+wit.app.update(myNewApp.id, {private: false}).then(() => {
   // updated app
   console.log(myNewApp)
 })
 ```
 #### Delete an app (permanently)
 ```Javascript
-wit.delete(myNewApp.id).then((res) => {
+wit.app.delete(myNewApp.id).then((res) => {
   console.log('Permanently deleted')
 })
 ```
