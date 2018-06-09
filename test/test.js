@@ -7,7 +7,10 @@ const Entity = require('../src/lib/Entity')
 const Intent = require('../src/lib/Intent')
 
 var token = process.env.token
-if (!token) throw 'Must pass wit app token as parameter `env token=XXXXXXXXX npm test`'
+if (!token) {
+  throw 'Must pass wit app token as parameter `env token=XXXXXXXXX npm test`'
+  process.exit()
+}
 
 describe('Wit', function () {
   describe('Instantiation', function () {
@@ -138,14 +141,16 @@ describe('Wit', function () {
     beforeEach(function () {
       return wit.entity.add('country').then(entity => {
         return wit.entity.update('country', { values: [{ value: 'Yugoslavia' }] }).then(entity => {
+        }).catch(e => {
         })
       }).catch(e => {
         return wit.entity.update('country', { values: [{ value: 'Yugoslavia' }] }).then(entity => {
+        }).catch(e => {
         })
       })
     })
     it('Should add a value', function () {
-      return wit.value.add('country', 'Tunisia', ['Tunisia', 'etoile du nord'], { continent: 'africa' }).then((entity) => {
+      return wit.value.add('country', 'Tunisia', ['tounes', 'tunis'], 'africa_1').then((entity) => {
         expect(entity).to.be.an(Entity)
         expect(entity.id).not.to.be.empty()
         expect(entity.lookups).to.contain('keywords')
@@ -161,7 +166,7 @@ describe('Wit', function () {
       })
     })
   })
-
+  
   describe('Expression services', function () {
     beforeEach(function () {
       return wit.entity.add('country').then(entity => {
@@ -200,16 +205,16 @@ describe('Wit', function () {
         ]).then(resZero => {
           return wit.train('Hello Tunisia', [
             {
+              entity: "wit$greetings",
+              value: "true",
+              start: 0,
+              end: 5
+            },
+            {
               entity: "country",
               value: "Tunisia",
               start: 6,
               end: 13
-            },
-            {
-              entity: "wit$greetings",
-              value: true,
-              start: 0,
-              end: 5
             }
           ]).then(resOne => {
             return wit.train('Tunis says hi', [
@@ -221,7 +226,7 @@ describe('Wit', function () {
               },
               {
                 entity: "wit$greetings",
-                value: true,
+                value: "true",
                 start: 11,
                 end: 13
               }
@@ -243,12 +248,14 @@ describe('Wit', function () {
       })
     })
     describe('Unlearn one sample', function () {
-      return wit.forget('This is meant to be unlearned').then(res => {
-        expect(res).to.be.an(Object)
-        expect(res.sent).to.be.ok()
-        expect(res.n).to.be.ok()
-      }).catch(e => {
-        expect(e).to.not.be.ok()
+      it('Should yeild on a json response', function () {
+        return wit.forget('This is meant to be unlearned').then(res => {
+          expect(res).to.be.an(Object)
+          expect(res.sent).to.be.ok()
+          expect(res.n).to.be.ok()
+        }).catch(e => {
+          expect(e).to.not.be.ok()
+        })
       })
     })
   })
@@ -290,7 +297,6 @@ describe('Wit', function () {
           expect(intent).to.have.property('entities')
           expect(intent.entities).not.to.be.empty()
           expect(intent.entities).to.have.property('greetings')
-          expect(intent.entities).not.to.have.property('country')
         }).catch(e => {
           expect(e).to.not.be.ok()
         })
@@ -304,9 +310,8 @@ describe('Wit', function () {
         expect(intent).to.be.an(Intent)
         expect(intent._test).to.be('hello')
         expect(intent.entities).not.to.be.empty()
-        expect(intent.entities).to.have.property('wit$greetings')
+        expect(intent.entities).to.have.property('greetings')
         const bestMatch = intent.maxConfidence()
-        console.log(bestMatch)
         expect(bestMatch).to.have.property('confidence')
         expect(bestMatch).to.have.property('value')
         expect(bestMatch).to.have.property('entity')
@@ -412,7 +417,7 @@ describe('Wit', function () {
     describe('Api fails', function () {
       it('Should fail & return Error instance with a message and code props', function () {
         return defectedWit.entity.list().then(entities => {
-          console.log(entities)
+          expect(entities).not.to.be.ok()
         }).catch(e => {
           expect(e).to.be.an(Error)
           expect(e).to.have.property('code')
@@ -424,7 +429,7 @@ describe('Wit', function () {
     describe('Api errors', function () {
       it('Should fail & return Error instance with a message and code props', function () {
         return wit.entity.delete('cantbe_an_entity').then(entity => {
-          console.log(entity)
+          expect(entities).not.to.be.ok()
         }).catch(e => {
           expect(e).to.be.an(Error)
           expect(e).to.have.property('code')

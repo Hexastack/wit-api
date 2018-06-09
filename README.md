@@ -100,6 +100,9 @@ myEntity.save().then(() => {
 The training happens on an EntityValue level, so you need to have an entity having at least one value. Then you can send text to indicate that it matches the EntityValue.
 
 Additionaly if you are capturing relevant data, you can indicate where the relevant portion starts and ends.
+
+
+__Important!__ Truthy values must be `value: "true"` (string)
 ```Javascript
 wit.train('I enjoyed playing MGS2 while eating pizza', [
   {
