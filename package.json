@@ -1,6 +1,6 @@
 {
   "name": "wit-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Implementation of wit api, provides methods to easily manage your wit app",
   "main": "index.js",
   "keywords": [
