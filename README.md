@@ -17,7 +17,7 @@ const wit = new Wit('<YOUR-SERVER-ACCESS-TOKEN>')
 
 ## Message
 ```Javascript
-wit.message('Wake me up when septembre end!').then((intent) => {
+wit.message('Wake me up when september end!').then((intent) => {
   // intent is an instance of Entity
   console.log(intent)
   // We can call Entity methods cuch as `.maxConfidence()`
