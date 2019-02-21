@@ -48,6 +48,8 @@ const Wit = function(token, timeout) {
   const trainer = sample(this.doRequest)
   this.train = trainer.add
   this.forget = trainer.delete
+  this.getSamples = trainer.get
+  this.backup = trainer.export
 
   this.app = function(name, data) {
     return new App(name, this.doRequest, data)

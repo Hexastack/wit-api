@@ -421,7 +421,7 @@ describe('Wit', function () {
         }).catch(e => {
           expect(e).to.be.an(Error)
           expect(e).to.have.property('code')
-          expect(e.code).to.be('unknown')
+          expect(e.code).to.be('no-auth')
           expect(e.message).not.to.be.empty()
         })
       })
