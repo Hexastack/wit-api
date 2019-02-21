@@ -13,12 +13,9 @@ const actions = function(id) {
 
 module.exports = function (request) {
   return {
-    add: function(text, entities) {
+    add: function (...args) {
       let payload = actions().add
-      let body = [{
-        text,
-        entities
-      }]
+      let body = Array.isArray(args[0]) ? args[0] : [{text: args[0], entities: args[1]}]
       return new Promise((resolve, reject) => {
         try {
           payload.body = JSON.stringify(body)
@@ -33,11 +30,9 @@ module.exports = function (request) {
         })
       })
     },
-    delete: function (text) {
+    delete: function (...args) {
       let payload = actions().delete
-      let body = [{
-        text
-      }]
+      let body = Array.isArray(args[0]) ? args[0] : [{text: args[0]}]
       return new Promise((resolve, reject) => {
         try {
           payload.body = JSON.stringify(body)
