@@ -1,6 +1,6 @@
 {
   "name": "wit-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Implementation of wit api, provides methods to easily manage your wit app",
   "main": "index.js",
   "keywords": [
@@ -14,7 +14,7 @@
     "ES6"
   ],
   "scripts": {
-    "test": "nyc mocha --timeout 5000 --reporter nyan"
+    "test": "nyc mocha --timeout 50000 --reporter nyan"
   },
   "repository": {
     "type": "git",
