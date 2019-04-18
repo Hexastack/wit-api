@@ -1,6 +1,6 @@
 {
   "name": "wit-api",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "Implementation of wit api, provides methods to easily manage your wit app",
   "main": "index.js",
   "keywords": [
@@ -21,13 +21,5 @@
     "url": "https://github.com/Hexastack/wit-api.git"
   },
   "author": "Hexastack <contact@hexastack.com>",
-  "license": "BSD-4-Clause",
-  "dependencies": {
-    "request": "^2.85.0"
-  },
-  "devDependencies": {
-    "expect.js": "^0.3.1",
-    "mocha": "^5.2.0",
-    "nyc": "^12.0.2"
-  }
+  "license": "BSD-4-Clause"
 }

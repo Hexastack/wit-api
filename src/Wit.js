@@ -1,68 +1,56 @@
-const request = require('request')
-const requestApi = require('./lib/requestAPI')
-
-const message = require('./Message')
-const speech = require('./Speech')
-const entity = require('./Entity')
-const value = require('./Value')
-const expression = require('./Expression')
-const sample = require('./Sample')
-const app = require('./App')
-
-const App = require('./lib/App')
+const init = require('./lib/init')
+const SampleService = require('./SampleService')
+const EntityService = require('./EntityService')
+const IntentService = require('./IntentService')
 const Entity = require('./lib/Entity')
-const Intent = require('./lib/Intent')
 
-Date.prototype.getFormattedDate = function() {
+Date.prototype.getFormattedDate = function () {
   const date = this.getDate()
   return date < 10 ? `0${date}` : date
 }
-Date.prototype.getFormattedMonth = function() {
+Date.prototype.getFormattedMonth = function () {
   const month = this.getMonth() + 1
   return month < 10 ? `0${month}` : month
 }
 
-const getVersion = function() {
+const getVersion = function () {
   const date = new Date()
   return `${date.getFullYear()}${date.getFormattedMonth()}${date.getFormattedDate()}`
 }
 
-const Wit = function(token, timeout) {
-  const requestWrapper = request.defaults({
-    baseUrl: 'https://api.wit.ai/',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    qs: {
-      v: getVersion()
-    },
-    timeout: timeout || 20000
-  })
-  this.doRequest = requestApi(requestWrapper)
-  this.message = message(this.doRequest)
-  this.speech = speech(this.doRequest)
-  this.value = value(this.doRequest)
-  this.expression = expression(this.doRequest)
-  const trainer = sample(this.doRequest)
-  this.train = trainer.add
-  this.forget = trainer.delete
-  this.getSamples = trainer.get
-  this.backup = trainer.export
-
-  this.app = function(name, data) {
-    return new App(name, this.doRequest, data)
+const Wit = function (token, options = { version: getVersion(), timeout: 20000, debug: false }) {
+  this.request = init(token, options.version, options.timeout, options.debug)
+  this.services = {
+    sample: SampleService(this.request),
+    entity: EntityService(this.request),
+    intent: IntentService(this.request)
   }
-  Object.assign(this.app, app(this.doRequest))
-
-  this.entity = function(name, data) {
-    return new Entity(name, this.doRequest, data)
+  this.entities = {}
+  this.reset = () => {
+    this.entities = {}
+    this.entities.add = async (name, doc) => {
+      try {
+        const entity = await this.services.entity.add(name, doc)
+        this.entities[entity.name] = new Entity(this.services.entity, entity, this.entities)
+      } catch (e) {
+        console.error(e)
+      }
+    }
   }
-  Object.assign(this.entity, entity(this.doRequest))
-
-  this.intent = function(result, options) {
-    return new Intent(result, options)
+  this.reset()
+  this.init = async () => {
+    try {
+      const entities = await this.services.entity.sync()
+      entities.forEach(e => {
+        this.entities[e.name] = new Entity(this.services.entity, e, this.entities)
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  this.sync = async () => {
+    this.reset()
+    await this.init()
   }
 }
 
