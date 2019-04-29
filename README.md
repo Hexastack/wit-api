@@ -103,12 +103,13 @@ await wit.services.sample.forget([
   {text: 'I would like to have a jean please.'}
 ])
 ```
-## Consuming (text & speech)
+## Guessing (text & speech)
+This is actually where we use the api for understanding
 ```javascript
 // this goes inside an `async function`
 
 // Text:
-const guess = await wit.services.intent.message('I want to try a coton black shirt, preferably size 43')
+const guess = await wit.services.guess.message('I want to try a coton black shirt, preferably size 43')
 console.log(guess)
 /* example of a result:
 { _text: 'I want to try a coton black shirt, preferably size 43',
@@ -127,12 +128,12 @@ console.log(guess)
 */
 
 // Audio:
-await wit.services.intent.speech('path/to/an/audio/file.wav')
+await wit.services.guess.speech('path/to/an/audio/file.wav')
 ```
 Both `.message` and `.speech` can take additional options, in like the following
 ```javascript
 const options = {n: 5}
-await wit.services.intent.message(text, options)
+await wit.services.guess.message(text, options)
 ```
 More about these options at https://wit.ai/docs/http/20170307#get__message_link
 

@@ -1,7 +1,7 @@
 const init = require('./lib/init')
 const SampleService = require('./SampleService')
 const EntityService = require('./EntityService')
-const IntentService = require('./IntentService')
+const GuessService = require('./GuessService')
 const Entity = require('./lib/Entity')
 
 Date.prototype.getFormattedDate = function () {
@@ -23,7 +23,7 @@ const Wit = function (token, options = { version: getVersion(), timeout: 20000, 
   this.services = {
     sample: SampleService(this.request),
     entity: EntityService(this.request),
-    intent: IntentService(this.request)
+    guess: GuessService(this.request)
   }
   this.entities = {}
   this.reset = () => {
