@@ -4,8 +4,6 @@ const qs = require('querystring')
 module.exports = init = function (token, version = '20170307', timeout = 20000, debug = false) {
   return function (options, data) {
     return new Promise((resolve, reject) => {
-      //if (options.method && ['POST', 'PUT', 'PATCH'].indexOf(options.method.toUpperCase()) !== -1)
-
 
       Object.assign(options, {
         hostname: 'api.wit.ai',

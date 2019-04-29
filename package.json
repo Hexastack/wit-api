@@ -1,6 +1,6 @@
 {
   "name": "wit-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Implementation of wit api, provides methods to easily manage your wit app",
   "main": "index.js",
   "keywords": [
@@ -11,10 +11,11 @@
     "ai",
     "bot",
     "chatbot",
-    "ES6"
+    "ES6",
+    "async/await"
   ],
   "scripts": {
-    "test": "nyc mocha --timeout 50000 --reporter nyan"
+    "test": "echo 'no test exists -FOR NOW-'"
   },
   "repository": {
     "type": "git",
