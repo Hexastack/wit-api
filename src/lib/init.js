@@ -35,6 +35,7 @@ module.exports = init = function (token, version = '20170307', timeout = 20000, 
 
       options.path += '?' + qs.stringify(options.qs)
 
+      let timeouted = false
       const req = https.request(options, function (res) {
         if (debug)
           console.debug(res.req._header)
@@ -54,6 +55,16 @@ module.exports = init = function (token, version = '20170307', timeout = 20000, 
             return reject(new Error(response.error))
           return resolve(response)
         })
+      })
+      req.on('timeout', () => {
+        timeouted = true
+        req.abort()
+      })
+      req.on('abort', (err) => {
+        if (timeouted) {
+          return reject(new Error(`Request timed-out, request was ${req._header}`))
+        }
+        return reject(new Error(`Request aborted, request was ${req._header}`))
       })
       req.on('error', function (err) {
         return reject(err)

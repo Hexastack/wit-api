@@ -18,8 +18,8 @@ const getVersion = function () {
   return `${date.getFullYear()}${date.getFormattedMonth()}${date.getFormattedDate()}`
 }
 
-const Wit = function (token, options = { version: getVersion(), timeout: 20000, debug: false }) {
-  this.request = init(token, options.version, options.timeout, options.debug)
+const Wit = function (token, { version, timeout, debug}) {
+  this.request = init(token, version || getVersion(), timeout || 20000, debug)
   this.services = {
     sample: SampleService(this.request),
     entity: EntityService(this.request),
