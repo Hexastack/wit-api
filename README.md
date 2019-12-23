@@ -1,7 +1,7 @@
 # wit-api
 wit-api is a node package that allows you to easily configure, train and consume your NLP through Wit.ai HTTP API.
 
-**Note**: This is the version 1.x.y, it has no dependency, and it uses `async`/`await`, if you prefer using `promises` please refer to the [the 0.0.6 version](https://github.com/Hexastack/wit-api/tree/0.0.6) (**`npm i wit-api @0.0.6`**), that version's branch will recieve only hotfixes and won't support additional features.
+**Note**: This is the version 1.x.y, it has no dependency, and it uses `promises`.
 
 **Note**: Version 1.0.0 is stable, and will recieve only additional utils methods
 
@@ -105,6 +105,8 @@ await wit.services.sample.forget([
 ```
 ## Guessing (text & speech)
 This is actually where we use the api for understanding
+
+All the guess methods retuen a Guess Object
 ```javascript
 // this goes inside an `async function`
 
@@ -127,6 +129,12 @@ console.log(guess)
 }
 */
 
+// Language:
+await wit.services.guess.language('je m\'appel foobar')
+
+// You can also have both language guessing and text guessing by using
+await wit.services.guess.all('I want to try a coton black shirt, preferably size 43')
+
 // Audio:
 await wit.services.guess.speech('path/to/an/audio/file.wav')
 ```
@@ -136,5 +144,29 @@ const options = {n: 5}
 await wit.services.guess.message(text, options)
 ```
 More about these options at https://wit.ai/docs/http/20170307#get__message_link
+
+## Guess Methods
+Once the guessing service was called, it returns a Guess Object, theses objects have utils methods.
+
+For instance to return only relevant guesses (with confidance above 0.95)
+```javascript
+const guess = await wit.services.guess.all('I want to try a coton black shirt, preferably size 43', {n: 5})
+console.log(guess.bestGuesses(.95))
+/* 
+would print:
+{
+  "shirtTextile": {"confidence": 1, "value": "coton", "type": "value"},
+  "color": {"metadata": "#000000", "confidence": 1, "value": "black", "type": "value"},
+  "product": {"confidence": 1, "value": "shirt", "type": "value"},
+  "size": {"confidence": 1, "value": "XL", "type": "value"},
+  "intent": {"confidence": 0.98808266775175, "value": "request"},
+  "language": {"locale": "en_XX", "confidence": 1}
+}
+*/
+
+// Additionally you can filter and softfilter guessing results using:
+guess.filter(.95)
+guess.softFilter(1)
+```
 
 ###### with love from Hexastack
